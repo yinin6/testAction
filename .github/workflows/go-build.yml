@@ -32,12 +32,10 @@ jobs:
           name: myapp-${{ matrix.os }}
           path: ./myapp-${{ matrix.os }}
 
+
   create-release:
     needs: build
     runs-on: ubuntu-latest
-    strategy:
-      matrix:
-        os: [ ubuntu-latest, macos-latest ]
     steps:
       - name: Create Release
         id: create_release
@@ -49,6 +47,10 @@ jobs:
           release_name: Release exe
           draft: false
           prerelease: false
+      - name: run ls
+        run: ls
+        shell: bash
+
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
