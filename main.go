@@ -19,14 +19,20 @@ func main() {
 		"backoff", time.Second,
 	)
 	sugar.Infof("Failed to fetch URL: %s", url)
-
-	// Define a handler function
-	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
-		fmt.Fprintf(w, "Hello, you've reached %s!", r.URL.Path)
-	})
+	n := 0
 
 	// Initialize and start the HTTP server on port 8889
 	fmt.Println("Server is listening on port 8889")
+
+	// Define a handler function
+	http.HandleFunc("/", func(w http.ResponseWriter, r *http.Request) {
+		fmt.Fprintf(w, "Hello, you are th-%v", n)
+		sugar.Infow("request to /",
+			"number", n,
+		)
+		n++
+	})
+
 	if err := http.ListenAndServe(":8889", nil); err != nil {
 		fmt.Printf("Error starting server: %s\n", err)
 	}
