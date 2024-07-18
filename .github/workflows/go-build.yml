@@ -26,6 +26,9 @@ jobs:
         run: go build -v -o myapp-${{ matrix.os }} ./...
         shell: bash
 
+      - name: run ls
+        run: ls
+
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
         with:
