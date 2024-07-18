@@ -32,9 +32,11 @@ jobs:
           name: myapp-${{ matrix.os }}
           path: ./myapp-${{ matrix.os }}
 
-      # Assuming you want to create a release and upload assets for each OS
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
       - name: Create Release
-        id: create_release
         uses: actions/create-release@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
@@ -43,7 +45,6 @@ jobs:
           release_name: Release exe
           draft: false
           prerelease: false
-
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
