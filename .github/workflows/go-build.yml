@@ -32,3 +32,32 @@ jobs:
         with:
           name: myapp-${{ matrix.os }}
           path: ./myapp-${{ matrix.os }}
+
+
+  release:
+    needs: build
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        os: [ ubuntu-latest, macos-latest ]
+        go: [ '1.21' ]
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      - name: Download artifact
+        uses: actions/download-artifact@v2
+        with:
+          name: myapp-${{ matrix.os }}
+          path: ./myapp-${{ matrix.os }}
+
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: 0.0.1
+          release_name: Release exe
+          draft: false
+          prerelease: false
