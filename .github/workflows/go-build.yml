@@ -21,11 +21,6 @@ jobs:
           draft: false
           prerelease: false
 
-      - name: run ls
-        run: |
-          ls
-          pwd
-  
   
 
   build:
@@ -48,10 +43,6 @@ jobs:
         run: go build -v -o myapp-${{ matrix.os }} ./...
         shell: bash
 
-      - name: run ls
-        run: |
-          ls
-          pwd
 
       - name: Upload Artifact
         uses: actions/upload-artifact@v4
