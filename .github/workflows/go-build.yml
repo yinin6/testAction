@@ -6,6 +6,28 @@ on:
       - master
 
 jobs:
+  create-release:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Create Release
+        id: create_release
+        uses: actions/create-release@v1
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ github.run_number }}
+          release_name: Release exe
+          draft: false
+          prerelease: false
+
+      - name: run ls
+        run: |
+          ls
+          pwd
+  
+  
+
   build:
     name: Build on ${{ matrix.os }}
     runs-on: ${{ matrix.os }}
@@ -37,33 +59,12 @@ jobs:
           name: myapp-${{ matrix.os }}
           path: ./myapp-${{ matrix.os }}
 
-
-  create-release:
-    needs: build
-    runs-on: ubuntu-latest
-    steps:
-      - name: Create Release
-        id: create_release
-        uses: actions/create-release@v1
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
-        with:
-          tag_name: ${{ github.run_number }}
-          release_name: Release exe
-          draft: false
-          prerelease: false
-
-      - name: run ls
-        run: |
-          ls
-          pwd
-
       - name: Upload Release Asset
         uses: actions/upload-release-asset@v1
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
         with:
-          upload_url: ${{ steps.create_release.outputs.upload_url }}
+          upload_url: ${{ jobs.steps.create_release.outputs.upload_url }}
           asset_path: ./myapp-ubuntu-latest
           asset_name: myapp-ubuntu-latest-binary
           asset_content_type: application/octet-stream
